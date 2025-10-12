@@ -1,0 +1,19 @@
+{
+  "newUser": {
+    "username": "AutoUser1",
+    "password": "Auto@123",
+    "employeeName": "Paul Collings",
+    "role": "Admin",
+    "status": "Enabled"
+  },
+  "newEmployee": {
+    "firstName": "Cypress",
+    "lastName": "Tester",
+    "id": "9999"
+  },
+  "candidate": {
+    "firstName": "Automation",
+    "lastName": "Candidate",
+    "email": "auto.candidate@test.com"
+  }
+}
