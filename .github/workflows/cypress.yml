@@ -1,55 +1,30 @@
-name: 🧪 Cypress E2E Tests
+name: Cypress E2E Tests
 
-on:
-  push:
-    branches:
-      - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
+on: [push, pull_request]
 
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: ⚙️ Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
-      - name: 📦 Install Dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: 🧠 Verify Cypress Installation
+      - name: Verify Cypress
         run: npx cypress verify
 
-      - name: 🧪 Run Cypress Tests (Headless Chrome)
+      - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
-          headless: true
-          config-file: cypress.config.js
           record: false
-          start: npm start
-          wait-on: 'https://opensource-demo.orangehrmlive.com/web/index.php/auth/login'
-          wait-on-timeout: 60
-
-      - name: 📸 Upload Screenshots (if failed)
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-screenshots
-          path: cypress/screenshots
-
-      - name: 📁 Upload Videos
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-videos
-          path: cypress/videos
+          spec: cypress/e2e/**/*.cy.js
+          # We remove 'headless' and 'start' because this is a hosted app
