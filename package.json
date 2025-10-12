@@ -1,15 +1,18 @@
 {
   "name": "orangehrm-cypress-tests",
   "version": "1.0.0",
-  "description": "",
+  "description": "Automated Cypress tests for OrangeHRM demo application",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cypress run",
+    "open": "cypress open",
+    "verify": "cypress verify"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["cypress", "orangehrm", "automation", "e2e"],
+  "author": "QA Team",
   "license": "ISC",
   "devDependencies": {
     "cypress": "^15.4.0"
   }
 }
+
