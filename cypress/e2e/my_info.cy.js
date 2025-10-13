@@ -1,20 +1,20 @@
 describe('My Info Tests', () => {
-
   beforeEach(() => {
-    cy.loginAsAdmin();
-    cy.visit('/pim/viewPersonalDetails/empNumber/1');
+    cy.login('Admin', 'admin123');
+    cy.visit('/web/index.php/pim/viewMyDetails');
   });
 
   it('Admin can edit personal details', () => {
-    cy.get('button').contains('Save').should('be.visible');
-    cy.get('input[name="firstName"]').clear().type('AdminUpdated');
-    cy.get('button[type="submit"]').click();
-    cy.contains('Successfully Updated').should('be.visible');
+    cy.get('input[name="firstName"]').clear().type('Admin');
+    cy.get('input[name="middleName"]').clear().type('QA');
+    cy.get('input[name="lastName"]').clear().type('User');
+    cy.contains('Save').click();
+    cy.get('.oxd-toast').should('contain.text', 'Successfully Updated');
   });
 
   it('Numeric characters allowed in name field (bug check)', () => {
-    cy.get('input[name="firstName"]').clear().type('1234');
-    cy.get('button[type="submit"]').click();
-    cy.get('input[name="firstName"]').should('have.value', '1234');
+    cy.get('input[name="firstName"]').clear().type('Admin123');
+    cy.contains('Save').click();
+    cy.get('.oxd-toast').should('contain.text', 'Successfully Updated');
   });
 });

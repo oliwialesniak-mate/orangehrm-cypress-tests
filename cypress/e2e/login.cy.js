@@ -1,7 +1,6 @@
 describe('Login and Authentication Tests', () => {
-
   beforeEach(() => {
-    cy.visit('/auth/login');
+    cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
   });
 
   it('User is able to login with valid credentials', () => {
@@ -9,25 +8,25 @@ describe('Login and Authentication Tests', () => {
     cy.get('input[name="password"]').type('admin123');
     cy.get('button[type="submit"]').click();
     cy.url().should('include', '/dashboard');
-    cy.contains('Dashboard').should('be.visible');
+    cy.get('.oxd-topbar-header-breadcrumb > h6').should('contain.text', 'Dashboard');
   });
 
   it('User is unable to login with invalid credentials', () => {
-    cy.get('input[name="username"]').type('wrongUser');
-    cy.get('input[name="password"]').type('wrongPass');
+    cy.get('input[name="username"]').type('Admin');
+    cy.get('input[name="password"]').type('wrongpass');
     cy.get('button[type="submit"]').click();
-    cy.contains('Invalid credentials').should('be.visible');
+    cy.get('.oxd-alert-content').should('contain.text', 'Invalid credentials');
   });
 
   it('User is able to logout successfully', () => {
-    cy.loginAsAdmin();
-    cy.get('.oxd-userdropdown-tab').click();
+    cy.login('Admin', 'admin123');
+    cy.get('.oxd-userdropdown-name').click();
     cy.contains('Logout').click();
     cy.url().should('include', '/auth/login');
   });
 
   it('Forgot password link navigates correctly', () => {
     cy.contains('Forgot your password?').click();
-    cy.url().should('include', '/auth/requestPasswordResetCode');
+    cy.url().should('include', '/requestPasswordResetCode');
   });
 });

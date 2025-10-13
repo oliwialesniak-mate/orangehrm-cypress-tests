@@ -1,21 +1,22 @@
 describe('PIM - Employee Management Tests', () => {
-
   beforeEach(() => {
-    cy.loginAsAdmin();
-    cy.visit('/pim/viewEmployeeList');
+    cy.login('Admin', 'admin123');
+    cy.visit('/web/index.php/pim/viewEmployeeList');
   });
 
   it('Admin can add a new employee', () => {
     cy.contains('Add').click();
-    cy.get('input[name="firstName"]').type('Cypress');
-    cy.get('input[name="lastName"]').type('Tester');
-    cy.get('button[type="submit"]').click();
-    cy.contains('Successfully Saved').should('be.visible');
+    cy.get('input[name="firstName"]').type('John');
+    cy.get('input[name="lastName"]').type('Doe');
+    cy.contains('Save').click();
+    cy.get('.oxd-toast').should('contain.text', 'Successfully Saved');
   });
 
   it('Employee list displays added employee', () => {
-    cy.get('input[placeholder="Type for hints..."]').type('Cypress Tester');
-    cy.get('button[type="submit"]').click();
-    cy.contains('Cypress Tester').should('exist');
+    cy.visit('/web/index.php/pim/viewEmployeeList');
+    cy.get('input[placeholder="Type for hints..."]').type('John Doe');
+    cy.wait(1000);
+    cy.contains('Search').click();
+    cy.contains('John Doe').should('exist');
   });
 });
