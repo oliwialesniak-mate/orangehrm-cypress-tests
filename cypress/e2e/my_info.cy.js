@@ -1,7 +1,9 @@
+/// <reference types="cypress" />
+
 describe('My Info Tests', () => {
   beforeEach(() => {
     cy.login('Admin', 'admin123');
-    cy.visit('/web/index.php/pim/viewMyDetails');
+    cy.visit('/pim/viewMyDetails');
   });
 
   it('Admin can edit personal details', () => {

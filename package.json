@@ -8,11 +8,16 @@
     "open": "cypress open",
     "verify": "cypress verify"
   },
-  "keywords": ["cypress", "orangehrm", "automation", "e2e"],
+  "keywords": [
+    "cypress",
+    "orangehrm",
+    "automation",
+    "e2e"
+  ],
   "author": "QA Team",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^15.4.0"
+    "cypress": "^15.4.0",
+    "cypress-real-events": "^1.15.0"
   }
 }
-

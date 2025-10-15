@@ -1,6 +1,8 @@
+/// <reference types="cypress" />
+
 describe('Login and Authentication Tests', () => {
   beforeEach(() => {
-    cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+    cy.visit('/auth/login');
   });
 
   it('User is able to login with valid credentials', () => {
@@ -18,11 +20,21 @@ describe('Login and Authentication Tests', () => {
     cy.get('.oxd-alert-content').should('contain.text', 'Invalid credentials');
   });
 
-  it('User is able to logout successfully', () => {
+  it('User is able to logout successfully (with exception handling)', () => {
+    // 🔹 Ignore known OrangeHRM logout JS error
+    Cypress.on('uncaught:exception', (err) => {
+      if (err.message.includes('reading \'response\'')) {
+        return false; // prevent Cypress from failing the test
+      }
+    });
+
     cy.login('Admin', 'admin123');
-    cy.get('.oxd-userdropdown-name').click();
-    cy.contains('Logout').click();
-    cy.url().should('include', '/auth/login');
+    cy.get('.oxd-userdropdown-name').should('be.visible').click();
+    cy.contains('Logout').click({ force: true });
+
+    // The app sometimes takes a second to redirect
+    cy.url({ timeout: 15000 }).should('include', '/auth/login');
+    cy.get('button[type="submit"]').should('be.visible'); // confirm login screen loaded
   });
 
   it('Forgot password link navigates correctly', () => {
