@@ -3,7 +3,7 @@ import "cypress-real-events/support";
 
 describe('Leave Management Tests', () => {
   beforeEach(() => {
-    cy.login('Admin', 'admin123');
+    cy.login('Admin', 'AdminUser!123');
   });
 
   it('Admin can assign leave to employee (demo-safe)', () => {
@@ -28,7 +28,7 @@ describe('Leave Management Tests', () => {
 
     // --- Select leave type ---
     cy.get('.oxd-select-text').first().click();
-    cy.contains('.oxd-select-option', 'CAN - Personal').click({ force: true });
+    cy.contains('.oxd-select-option', 'Personal').click({ force: true });
 
     // --- Enter dates (handle all selector variations) ---
     cy.get('body').then(($body) => {

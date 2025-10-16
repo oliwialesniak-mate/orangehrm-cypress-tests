@@ -5,7 +5,7 @@ describe('Admin - User Management Tests', () => {
   let createdUsername;
 
   beforeEach(() => {
-    cy.login('Admin', 'admin123');
+    cy.login('Admin', 'AdminUser!123');
     cy.url().should('include', '/dashboard');
     cy.contains('Admin').click();
     cy.get('h5', { timeout: 20000 }).should('contain.text', 'System Users');

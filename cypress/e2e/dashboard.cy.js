@@ -1,6 +1,6 @@
 describe('Dashboard Tests', () => {
   beforeEach(() => {
-    cy.login('Admin', 'admin123');
+    cy.login('Admin', 'AdminUser!123');
     cy.url().should('include', '/dashboard');
   });
 

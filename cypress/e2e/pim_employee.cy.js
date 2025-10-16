@@ -12,7 +12,7 @@ describe('PIM - Add Employee Workflow (Demo-Safe)', () => {
 
     // Login
     cy.get('input[name="username"]').type('Admin');
-    cy.get('input[name="password"]').type('admin123');
+    cy.get('input[name="password"]').type('AdminUser!123');
     cy.get('button[type="submit"]').click();
 
     // Verify dashboard

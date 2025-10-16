@@ -2,7 +2,7 @@
 
 describe('My Info Tests', () => {
   beforeEach(() => {
-    cy.login('Admin', 'admin123');
+    cy.login('Admin', 'AdminUser!123');
     cy.visit('/pim/viewMyDetails');
   });
 
