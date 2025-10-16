@@ -7,26 +7,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2️⃣ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: npm ci
 
+      # 4️⃣ Start OrangeHRM server in the background
       - name: Start OrangeHRM server
-        run: npm start &   # replace with your actual start command if different
+        run: |
+          # Replace with your actual server start command
+          # Example: npm start, java -jar server.jar, docker-compose, etc.
+          npm start &
+          echo "Server started in background"
 
+      # 5️⃣ Wait until server is ready
       - name: Wait for server to be ready
-        run: npx wait-on http://localhost:8080/web/index.php
+        run: npx wait-on http://localhost:8080/web/index.php --timeout 120000
+        # waits up to 2 minutes for the server
 
+      # 6️⃣ Verify Cypress installation
       - name: Verify Cypress
         run: npx cypress verify
 
+      # 7️⃣ Run Cypress tests
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
@@ -34,3 +46,10 @@ jobs:
           headed: false
           record: false
           spec: cypress/e2e/**/*.cy.js
+
+      # 8️⃣ Optional: show Cypress test results logs
+      - name: Display Cypress results
+        if: failure()
+        run: |
+          echo "Cypress tests failed!"
+          cat cypress/results/* || true
