@@ -5,6 +5,10 @@ on: [push, pull_request]
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
+    services:
+      docker:
+        # Docker is available by default on ubuntu-latest
+        options: --privileged
 
     steps:
       # 1️⃣ Checkout repository
@@ -21,18 +25,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 4️⃣ Start OrangeHRM server in the background
-      - name: Start OrangeHRM server
-        run: |
-          # Replace with your actual server start command
-          # Example: npm start, java -jar server.jar, docker-compose, etc.
-          npm start &
-          echo "Server started in background"
+      # 4️⃣ Start OrangeHRM via Docker Compose
+      - name: Start OrangeHRM and DB
+        run: docker-compose up -d
 
       # 5️⃣ Wait until server is ready
-      - name: Wait for server to be ready
-        run: npx wait-on http://localhost:8080/web/index.php --timeout 120000
-        # waits up to 2 minutes for the server
+      - name: Wait for OrangeHRM server
+        run: npx wait-on http://localhost:8080 --timeout 180000
 
       # 6️⃣ Verify Cypress installation
       - name: Verify Cypress
@@ -46,10 +45,3 @@ jobs:
           headed: false
           record: false
           spec: cypress/e2e/**/*.cy.js
-
-      # 8️⃣ Optional: show Cypress test results logs
-      - name: Display Cypress results
-        if: failure()
-        run: |
-          echo "Cypress tests failed!"
-          cat cypress/results/* || true

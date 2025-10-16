@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8
+    container_name: orangehrm-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: ohrm
+      MYSQL_USER: ohrmuser
+      MYSQL_PASSWORD: ohrmpass
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 10
+
+  orangehrm:
+    image: orangehrm/orangehrm:latest
+    container_name: orangehrm-app
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ohrm
+      DB_USER: ohrmuser
+      DB_PASSWORD: ohrmpass
+    ports:
+      - "8080:80"
+    depends_on:
+      db:
+        condition: service_healthy
