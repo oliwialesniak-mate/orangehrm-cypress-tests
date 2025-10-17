@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-Cypress.Commands.add('login', (username = 'Admin', password = 'admin123') => {
+Cypress.Commands.add('login', (username = 'Admin', password = 'AdminUser!123') => {
   cy.session([username, password], () => {
     cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
 
