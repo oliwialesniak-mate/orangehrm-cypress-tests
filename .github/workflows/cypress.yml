@@ -7,10 +7,28 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
+      db:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: orangehrm
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
       orangehrm:
-        image: orangehrm/orangehrm:latest-demo
+        image: orangehrm/orangehrm:latest
         ports:
           - 8080:80
+        env:
+          ORANGEHRM_DATABASE_HOST: db
+          ORANGEHRM_DATABASE_USER: root
+          ORANGEHRM_DATABASE_PASSWORD: root
+          ORANGEHRM_DATABASE_NAME: orangehrm
         options: >-
           --health-cmd="curl -f http://localhost:80 || exit 1"
           --health-interval=15s
@@ -32,10 +50,10 @@ jobs:
       - name: 🧠 Verify Cypress installation
         run: npx cypress verify
 
-      - name: ⏳ Wait for OrangeHRM demo server
+      - name: ⏳ Wait for OrangeHRM to start
         run: |
-          echo "Waiting for OrangeHRM demo server..."
-          npx wait-on http://localhost:8080 --timeout 300000
+          echo "Waiting for OrangeHRM server..."
+          npx wait-on http://localhost:8080/web/index.php --timeout 600000
           echo "✅ OrangeHRM is up!"
 
       - name: 🧪 Run Cypress tests
@@ -47,6 +65,10 @@ jobs:
           config: baseUrl=http://localhost:8080/web/index.php
           spec: cypress/e2e/**/*.cy.js
 
-      - name: 🐞 Show Docker logs if failed
+      - name: 🐞 Show logs if failed
         if: failure()
-        run: docker logs $(docker ps -qf "ancestor=orangehrm/orangehrm:latest-demo") || true
+        run: |
+          echo "=== OrangeHRM logs ==="
+          docker logs $(docker ps -qf "ancestor=orangehrm/orangehrm:latest") || true
+          echo "=== MySQL logs ==="
+          docker logs $(docker ps -qf "ancestor=mysql:5.7") || true
