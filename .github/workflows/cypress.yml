@@ -5,43 +5,48 @@ on: [push, pull_request]
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
+
     services:
-      docker:
-        # Docker is available by default on ubuntu-latest
-        options: --privileged
+      orangehrm:
+        image: orangehrm/orangehrm:latest-demo
+        ports:
+          - 8080:80
+        options: >-
+          --health-cmd="curl -f http://localhost:80 || exit 1"
+          --health-interval=15s
+          --health-timeout=10s
+          --health-retries=20
 
     steps:
-      # 1️⃣ Checkout repository
-      - name: Checkout repository
+      - name: 🧾 Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node.js
-      - name: Setup Node.js
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # 3️⃣ Install dependencies
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: npm ci
 
-      # 4️⃣ Start OrangeHRM via Docker Compose
-      - name: Start OrangeHRM and DB
-        run: docker-compose up -d
-
-      # 5️⃣ Wait until server is ready
-      - name: Wait for OrangeHRM server
-        run: npx wait-on http://localhost:8080 --timeout 180000
-
-      # 6️⃣ Verify Cypress installation
-      - name: Verify Cypress
+      - name: 🧠 Verify Cypress installation
         run: npx cypress verify
 
-      # 7️⃣ Run Cypress tests
-      - name: Run Cypress tests
+      - name: ⏳ Wait for OrangeHRM demo server
+        run: |
+          echo "Waiting for OrangeHRM demo server..."
+          npx wait-on http://localhost:8080 --timeout 300000
+          echo "✅ OrangeHRM is up!"
+
+      - name: 🧪 Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
           headed: false
           record: false
+          config: baseUrl=http://localhost:8080/web/index.php
           spec: cypress/e2e/**/*.cy.js
+
+      - name: 🐞 Show Docker logs if failed
+        if: failure()
+        run: docker logs $(docker ps -qf "ancestor=orangehrm/orangehrm:latest-demo") || true
