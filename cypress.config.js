@@ -2,10 +2,10 @@ const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
   e2e: {
-    baseUrl: "http://localhost:8080/web/index.php",
+    baseUrl: "https://opensource-demo.orangehrmlive.com/web/index.php",
     viewportWidth: 1366,
     viewportHeight: 768,
-    defaultCommandTimeout: 10000,
+    defaultCommandTimeout: 15000,
     pageLoadTimeout: 60000,
     retries: 2,
     video: false,
