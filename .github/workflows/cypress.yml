@@ -60,8 +60,8 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
-          headed: false
           record: false
+          headed: false
           config: baseUrl=http://localhost:8080/web/index.php
           spec: cypress/e2e/**/*.cy.js
 
