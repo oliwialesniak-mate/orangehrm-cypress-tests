@@ -9,8 +9,12 @@ module.exports = defineConfig({
     pageLoadTimeout: 60000,
     retries: 2,
     video: false,
+
+    // Ensures cy.session works reliably across environments
+    experimentalSessionAndOrigin: true,
+
     setupNodeEvents(on, config) {
-      // node event listeners
+      // Custom event listeners (optional)
     },
   },
 });
